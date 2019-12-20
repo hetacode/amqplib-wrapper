@@ -4,7 +4,8 @@
   "description": "Handy wrapper for amqplib",
   "main": "out/index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "tsc"
   },
   "repository": {
     "type": "git",
@@ -23,6 +24,7 @@
   "homepage": "https://github.com/hetacode/amqplib-wrapper#readme",
   "dependencies": {
     "@types/amqplib": "^0.5.13",
-    "amqplib": "^0.5.5"
+    "amqplib": "^0.5.5",
+    "typescript": "^3.7.3"
   }
 }
