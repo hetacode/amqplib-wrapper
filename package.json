@@ -1,0 +1,28 @@
+{
+  "name": "amqplib-wrapper",
+  "version": "0.0.1",
+  "description": "Handy wrapper for amqplib",
+  "main": "out/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hetacode/amqplib-wrapper.git"
+  },
+  "keywords": [
+    "amqplib",
+    "wrapper",
+    "rabbitmq"
+  ],
+  "author": "S G",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/hetacode/amqplib-wrapper/issues"
+  },
+  "homepage": "https://github.com/hetacode/amqplib-wrapper#readme",
+  "dependencies": {
+    "@types/amqplib": "^0.5.13",
+    "amqplib": "^0.5.5"
+  }
+}
