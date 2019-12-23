@@ -26,7 +26,7 @@ jobs:
           registry-url: https://npm.pkg.github.com/
           scope: '@hetacode'
       - run: npm ci
-      - run: npm build
+      - run: npm run build
       - run: npm pack
       - run: npm publish
         env:
