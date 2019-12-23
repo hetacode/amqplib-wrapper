@@ -27,6 +27,7 @@ jobs:
           scope: '@hetacode'
       - run: npm ci
       - run: npm build
+      - run: npm pack
       - run: npm publish
         env:
           NODE_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
