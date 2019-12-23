@@ -1,6 +1,6 @@
 {
   "name": "@hetacode/amqplib-wrapper",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Handy wrapper for amqplib",
   "main": "out/index.js",
   "scripts": {
