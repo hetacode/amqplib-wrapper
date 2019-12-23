@@ -26,6 +26,7 @@ jobs:
           registry-url: https://npm.pkg.github.com/
           scope: '@hetacode'
       - run: npm ci
+      - run: npm build
       - run: npm publish
         env:
           NODE_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
