@@ -38,7 +38,7 @@ export const mq = async (hostname: string, callback: (input: MqInitCallback) => 
             publishers.push(async (conn: Connection) => {
                 if (exchangeName) {
                     let channel = await conn.createChannel();
-                    await channel.assertExchange(exchangeName, "fanout");
+                    await channel.assertExchange(exchangeName, "fanout", { durable: false });
                     senderCalback({
                         send: (input: object) => {
                             channel.publish(exchangeName, "", new Buffer(JSON.stringify(input)));
