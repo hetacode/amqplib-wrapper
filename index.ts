@@ -1,8 +1,8 @@
 import amqplib, { Connection } from "amqplib"
 
 export type MqInitCallback = {
-    addConsumer: (exchangeName: string | null, queueName: string | null, message: (message: object) => void) => void;
-    addPublisher: (exchangeName: string | null, queueName: string | null, senderCalback: (sender: MqSender) => void) => void;
+    addConsumer: (exchangeName: string | null, queueName: string | null, durability: boolean, message: (message: object) => void) => void;
+    addPublisher: (exchangeName: string | null, queueName: string | null, durability: boolean, senderCalback: (sender: MqSender) => void) => void;
 }
 
 export type MqSender = {
