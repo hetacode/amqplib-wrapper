@@ -19,7 +19,7 @@ export const mq = async (hostname: string, callback: (input: MqInitCallback) => 
                 let channel = await conn.createChannel();
                 if (exchangeName) {
                     await channel.assertExchange(exchangeName, "fanout", { durable: durability });
-                    let q = await channel.assertQueue(queueName ?? "", { exclusive: false });
+                    let q = await channel.assertQueue(queueName ?? "", { exclusive: false, durable: false });
                     await channel.bindQueue(q.queue, exchangeName, "");
                 }
                 else {
@@ -41,15 +41,15 @@ export const mq = async (hostname: string, callback: (input: MqInitCallback) => 
                     await channel.assertExchange(exchangeName, "fanout", { durable: durability });
                     senderCalback({
                         send: (input: object) => {
-                            channel.publish(exchangeName, "", new Buffer(JSON.stringify(input)));
+                            channel.publish(exchangeName, "", Buffer.from(JSON.stringify(input)));
                         }
                     })
                 } else {
                     let channel = await conn.createChannel();
-                    await channel.assertQueue(queueName ?? "");
+                    await channel.assertQueue(queueName ?? "", { durable: false, exclusive: false });
                     senderCalback({
                         send: (input: object) => {
-                            channel.publish(exchangeName ?? "", "", new Buffer(JSON.stringify(input)));
+                            channel.sendToQueue(queueName!, Buffer.from(JSON.stringify(input)));
                         }
                     })
                 }
