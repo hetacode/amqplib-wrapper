@@ -1,8 +1,8 @@
 import amqplib, { Connection } from "amqplib"
 
 export type MqInitCallback = {
-    addConsumer: (exchangeName: string | null, queueName: string | null, message: (message: object) => void) => void;
-    addPublisher: (exchangeName: string | null, queueName: string | null, senderCalback: (sender: MqSender) => void) => void;
+    addConsumer: (exchangeName: string | null, queueName: string | null, durability: boolean, message: (message: object) => void) => void;
+    addPublisher: (exchangeName: string | null, queueName: string | null, durability: boolean, senderCalback: (sender: MqSender) => void) => void;
 }
 
 export type MqSender = {
@@ -14,12 +14,12 @@ export const mq = async (hostname: string, callback: (input: MqInitCallback) => 
     let publishers: ((conn: Connection) => void)[] = [];
 
     callback({
-        addConsumer: (exchangeName: string | null, queueName: string | null, message: (message: object) => void) => {
+        addConsumer: (exchangeName: string | null, queueName: string | null, durability: boolean, message: (message: object) => void) => {
             consumers.push(async (conn: Connection) => {
                 let channel = await conn.createChannel();
                 if (exchangeName) {
-                    await channel.assertExchange(exchangeName, "fanout", { durable: false });
-                    let q = await channel.assertQueue(queueName ?? "", { exclusive: false });
+                    await channel.assertExchange(exchangeName, "fanout", { durable: durability });
+                    let q = await channel.assertQueue(queueName ?? "", { exclusive: false, durable: false });
                     await channel.bindQueue(q.queue, exchangeName, "");
                 }
                 else {
@@ -34,22 +34,22 @@ export const mq = async (hostname: string, callback: (input: MqInitCallback) => 
             });
 
         },
-        addPublisher: (exchangeName: string | null, queueName: string | null, senderCalback: (sender: MqSender) => void) => {
+        addPublisher: (exchangeName: string | null, queueName: string | null, durability: boolean, senderCalback: (sender: MqSender) => void) => {
             publishers.push(async (conn: Connection) => {
                 if (exchangeName) {
                     let channel = await conn.createChannel();
-                    await channel.assertExchange(exchangeName, "fanout", { durable: false });
+                    await channel.assertExchange(exchangeName, "fanout", { durable: durability });
                     senderCalback({
                         send: (input: object) => {
-                            channel.publish(exchangeName, "", new Buffer(JSON.stringify(input)));
+                            channel.publish(exchangeName, "", Buffer.from(JSON.stringify(input)));
                         }
                     })
                 } else {
                     let channel = await conn.createChannel();
-                    await channel.assertQueue(queueName ?? "");
+                    await channel.assertQueue(queueName ?? "", { durable: false, exclusive: false });
                     senderCalback({
                         send: (input: object) => {
-                            channel.publish(exchangeName ?? "", "", new Buffer(JSON.stringify(input)));
+                            channel.sendToQueue(queueName!, Buffer.from(JSON.stringify(input)));
                         }
                     })
                 }
