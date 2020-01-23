@@ -23,7 +23,7 @@ export const mq = async (hostname: string, callback: (input: MqInitCallback) => 
                     await channel.bindQueue(q.queue, exchangeName, "");
                 }
                 else {
-                    await channel.assertQueue(queueName ?? "");
+                    await channel.assertQueue(queueName ?? "", { durable: durability });
                 }
                 channel.consume(queueName ?? "", async msg => {
                     message(JSON.parse(msg?.content.toString() ?? ""));
@@ -46,7 +46,7 @@ export const mq = async (hostname: string, callback: (input: MqInitCallback) => 
                     })
                 } else {
                     let channel = await conn.createChannel();
-                    await channel.assertQueue(queueName ?? "", { durable: false, exclusive: false });
+                    await channel.assertQueue(queueName ?? "", { durable: durability, exclusive: false });
                     senderCalback({
                         send: (input: object) => {
                             channel.sendToQueue(queueName!, Buffer.from(JSON.stringify(input)));
